@@ -31,10 +31,7 @@ classdef AngleOfFlight < handle
             obj.LeadGoose = LeadGooseCent;
             obj.RearGoose1 = RearGoose1Cent;
             obj.RearGoose2 = RearGoose2Cent;          
-            [Population,avX,avY,avZ] = GetGraphData1(obj.FigureAnalyzed);
-            X = cell2mat(avX);
-            Y = cell2mat(avY);
-            Z = cell2mat(avZ);
+            [Population,X,Y,Z] = GetGraphData1(obj.FigureAnalyzed);
             PositionArray = [X;Y;Z];
             obj.GeesePositionArray = PositionArray;
             obj.NumberOfGeese = Population;
