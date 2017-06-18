@@ -95,7 +95,7 @@ classdef CtVSLg < handle
             % Plot each flock member's distance from the flock's centroid
             % as a function of that same member's distance from the lead
             % goose
-            figure('Visible','off');
+            figure();
             plot(obj.DistanceFromLeadGooseArray,obj.DistanceFromCentroidArray,...
                 '-ob','LineWidth',2);
             
