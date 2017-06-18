@@ -3,14 +3,14 @@ classdef CtVSLg < handle
     %   Detailed explanation goes here
     
     properties
-        DistanceFromCentroidArray
-        DistanceFromLeadGooseArray
-        FigureAnalyzed
-        AnalysisDate
-        LeadGoose
-        Centroid
-        GeesePositionArray
-        NumOfGeese
+        DistanceFromCentroidArray;
+        DistanceFromLeadGooseArray;
+        FigureAnalyzed;
+        AnalysisDate;
+        LeadGoose;
+        Centroid;
+        GeesePositionArray;
+        NumOfGeese;
     end
     
     methods
@@ -91,11 +91,11 @@ classdef CtVSLg < handle
             
         end
         
-        function GenerateFigure(obj,FigNum)
+        function GenerateFigure(obj)
             % Plot each flock member's distance from the flock's centroid
             % as a function of that same member's distance from the lead
             % goose
-            figure(FigNum);
+            figure('Visible','off');
             plot(obj.DistanceFromLeadGooseArray,obj.DistanceFromCentroidArray,...
                 '-ob','LineWidth',2);
             

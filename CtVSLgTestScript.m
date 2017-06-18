@@ -61,7 +61,11 @@ for i = 1:length(FileObj)
     SetFigName(DynamicFile.name);
     
     % Plot Ct as a function of Lg
-    MyCtVSLg.GenerateFigure(i);
+    MyCtVSLg.GenerateFigure();
+    
+    % Set .fig properties
+    SetFigProperties('Distance from the lead goose [m]',...
+        'Distance from the centroid [m]','on','on','Times New Roman');
     
     % Get a handle on the current figure
     CurrentFigObj = get(gcf);
@@ -71,19 +75,22 @@ for i = 1:length(FileObj)
     
     %writes an Excel spreadsheet of the packing factors to the current folder
     xlswrite(strrep(DynamicFile.name,'.fig',''),{'Distance_from_centroid'},...
-            sprintf('Sheet%s',num2str(i)),sprintf('A%d',1))
+            sprintf('Sheet%s',num2str(i)),sprintf('A%d',1));
         
     xlswrite(strrep(DynamicFile.name,'.fig',''),{'Distance_from_lead_goose'},...
-        sprintf('Sheet%s',num2str(i)),sprintf('B%d',1))
+        sprintf('Sheet%s',num2str(i)),sprintf('B%d',1));
     
     for j = 1:length(Ct)
         
         xlswrite(strrep(DynamicFile.name,'.fig',''),Ct(j),...
-            sprintf('Sheet%s',num2str(i)),sprintf('A%d',j+1))
+            sprintf('Sheet%s',num2str(i)),sprintf('A%d',j+1));
         
         xlswrite(strrep(DynamicFile.name,'.fig',''),Lg(j),...
-            sprintf('Sheet%s',num2str(i)),sprintf('B%d',j+1))
+            sprintf('Sheet%s',num2str(i)),sprintf('B%d',j+1));
         
     end
+    
+    % Close unique figure
+    close all
     
 end
