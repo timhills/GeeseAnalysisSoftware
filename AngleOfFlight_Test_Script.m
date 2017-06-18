@@ -6,6 +6,8 @@ Author: Tim Hills, 9-2-2016
 Top level test script for calculating the angle of flight of a flock of
 geese
 
+Edited: 6-17-2017
+
 %}
 
 %if there is a flock that is flying in a straight line, choose the middle
@@ -25,14 +27,16 @@ SaveDir = uigetdir('C:\Users\Timothy\Dropbox\Research',...
 % included in name of generated .xlsx file
 AnalysisDate = datestr(now,'mm_dd_yyyy');
 
-% set file name
-FileName = strcat('Angle_Of_Flight_',AnalysisDate);
-
 % set cd to get data from .fig files
 cd(FigDir);
 
 MyAngle = AngleOfFlight(AnalysisDate);
 FileObj = dir('*.fig')';
+
+% set file name
+FileName = strcat('Angle_Of_Flight_',AnalysisDate,'_',num2str(length(FileObj)),...
+    '_','Photos');
+
 for i = 1:length(FileObj)
     
     % set cd to get data from .fig files
@@ -73,14 +77,12 @@ end
 
 clc
 
-disp('Angle of Flight analysis complete')
-
 AOFData = xlsread(strcat(FileName,'.xls'));
 
-figure;
-h = histogram(AOFData,'Normalization','probability','BinWidth',10);
-ax = gca;
-ax.YGrid = 'on';
-ax.FontName = 'Times New Roman';
-xlabel(sprintf('Angle of Flight [%c]', char(176)),'FontName','Times New Roman')
-ylabel('Probability','FontName','Times New Roman')
+% Plot data in probability histogram
+PlotFreqHistogram(AOFData,10,sprintf('Angle of Flight [%c]', char(176)))
+
+% save histogram
+SaveFig(SaveDir,FileName);
+
+disp('Angle of Flight analysis complete')

@@ -23,13 +23,16 @@ classdef NND < handle
             obj.NearestNeighborDistance(obj.GeesePositionArray, obj.NumberOfGeese);
         end
         function GetFigureData(obj)         
-            [Population,avX,avY,avZ] = GetGraphData1(obj.FigureAnalyzed);
+            [Population,X,Y,Z] = GetGraphData1(obj.FigureAnalyzed);
+            % Values returned from figure in MATLAB 2017 are doubles
+            %{
             X = cell2mat(avX);
             Y = cell2mat(avY);
             Z = cell2mat(avZ);
-            obj.CellPositionArrayX = X;
-            obj.CellPositionArrayY = Y;
-            obj.CellPositionArrayZ = Z;
+            %}
+            obj.CellPositionArrayX = num2cell(X);
+            obj.CellPositionArrayY = num2cell(Y);
+            obj.CellPositionArrayZ = num2cell(Z);
             PositionArray = [X;Y;Z];
             obj.GeesePositionArray = PositionArray;
             obj.NumberOfGeese = Population;
@@ -41,7 +44,7 @@ classdef NND < handle
             diffX = zeros(1,NumberOfGeese);
             diffY = zeros(1,NumberOfGeese);
             diffZ = zeros(1,NumberOfGeese);
-            figure; %used for visualization of NND
+            %figure; %used for visualization of NND
             for k = 1:NumberOfGeese
 
                 for i = 1:NumberOfGeese
