@@ -43,15 +43,18 @@
         
         %figure data
         function GetFigureData(obj)
-            [Population,avX,avY,avZ] = GetGraphData1(obj.FigureAnalyzed);
-            X = cell2mat(avX);
-            Y = cell2mat(avY);
-            Z = cell2mat(avZ);
+            [Population,X,Y,Z] = GetGraphData1(obj.FigureAnalyzed);
+            %Data returned in MATLAB 2017 are doubles
+            %{
+            %X = cell2mat(avX);
+            %Y = cell2mat(avY);
+            %Z = cell2mat(avZ);
+            %}
             PositionArray = [X;Y;Z];
             obj.GeesePositionArray = PositionArray;
-            obj.CellPositionArrayX = avX;
-            obj.CellPositionArrayY = avY;
-            obj.CellPositionArrayZ = avZ;
+            obj.CellPositionArrayX = num2cell(X);
+            obj.CellPositionArrayY = num2cell(Y);
+            obj.CellPositionArrayZ = num2cell(Z);
             obj.NumberOfGeese = Population;
         end
         
