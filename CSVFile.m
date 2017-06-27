@@ -11,6 +11,7 @@ classdef CSVFile < handle
         FirstColumn
         DataColumn
         CurrentDataRow
+        Header
         
     end
     
@@ -25,11 +26,26 @@ classdef CSVFile < handle
             
         end
         
+        function InsertHeader(obj,HeaderData)
+            % Insert the titles of each column
+            obj.Header = HeaderData;
+            for i = 1:length(obj.Header)
+                fprintf(obj.FileID,'%s,',num2str(cell2mat(obj.Header(i))));
+            end
+            
+        end
+        
         function WriteLine(obj,CurrentData)
             % Write a line of data to the .csv file
-            CurrentData = sprintf('%s,',num2str(CurrentData));
+            CurrentData = sprintf('%0.2f,',CurrentData);
             obj.CurrentDataRow = CurrentData(1:end-1);
             fprintf(obj.FileID,obj.CurrentDataRow);
+            
+        end
+        
+        function StartNewLine(obj)
+            % Start writing data on next line
+            fprintf(obj.FileID,'\n');
             
         end
         
@@ -41,7 +57,7 @@ classdef CSVFile < handle
             
         end
         
-        function CloseFile()
+        function CloseFile(obj)
             % Close all currently open file
             fclose('all');
             
