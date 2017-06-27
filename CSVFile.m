@@ -15,6 +15,16 @@ classdef CSVFile < handle
         
     end
     
+    methods(Static)
+
+        function CloseFile()
+            % Close all currently open file
+            fclose('all');
+
+        end
+
+    end
+    
     methods
         
         function obj = CSVFile(Path,Name,Permission)
@@ -35,7 +45,14 @@ classdef CSVFile < handle
             
         end
         
-        function WriteLine(obj,CurrentData)
+        function WriteRowDescription(obj,RowDes)
+            % Right a description of the row being enters. Arguments are
+            % cell arrays for the name of the row
+            fprintf(obj.FileID,'%s',num2str(cell2mat(RowDes)));
+            
+        end
+        
+        function WriteDataLine(obj,CurrentData)
             % Write a line of data to the .csv file
             CurrentData = sprintf('%0.2f,',CurrentData);
             obj.CurrentDataRow = CurrentData(1:end-1);
@@ -54,12 +71,6 @@ classdef CSVFile < handle
             % object was originally instantiated with
             obj.PermissionType = Permission;
             obj.FileID = fopen(obj.FileName,Permission);
-            
-        end
-        
-        function CloseFile(obj)
-            % Close all currently open file
-            fclose('all');
             
         end
         
