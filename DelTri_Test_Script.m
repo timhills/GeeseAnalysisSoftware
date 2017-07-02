@@ -35,29 +35,38 @@ FileObj = dir('*.fig')';
 FileName = strcat('Packing_Factor_',AnalysisDate,'_',num2str(length(FileObj)),...
     '_','Photos');
 
+% Instantiate csv obj
+CSVData = CSVFile(SaveDir,FileName,'w');
+
+DataArray = [];
+HeaderArray = {};
+
+% set cd to get data from .fig files
+cd(FigDir);
 
 for i = 1:length(FileObj)
-    
-    % set cd to get data from .fig files
-    cd(FigDir);
     
     DynamicFile = FileObj(i);
     openfig(DynamicFile.name,'invisible');
     MyPackFrac.CalculatePackingFraction(DynamicFile.name);
+    
+    DataArray = [DataArray,MyPackFrac.PackingFraction];
 
-    % cd to save data
-    cd(SaveDir);
+    HeaderArray{i} = {DynamicFile.name};
 
-    %writes an Excel spreadsheet of the packing factors to the current folder
-    xlswrite(FileName,MyPackFrac.PackingFraction,'Sheet1',sprintf('B%d',i))
-    xlswrite(FileName,{DynamicFile.name},'Sheet1',sprintf('A%d',i))
-    %xlswrite(FileName,MyPackFrac.NumberOfGeese,'Sheet1',sprintf('C%d',i))
+    CSVData.InsertHeader(HeaderArray{i});
     
 end
 
 clc
 
-PFData = xlsread(strcat(FileName,'.xls'));
+% cd to save data
+cd(SaveDir);
+
+CSVData.StartNewLine;
+CSVData.WriteDataLine(DataArray);
+CSVData.CloseFile;
+PFData = csvread(strcat(FileName,'.csv'),1);
 
 % Plot data in probability histogram
 PlotFreqHistogram(PFData,0.00045,'Packing Factor')

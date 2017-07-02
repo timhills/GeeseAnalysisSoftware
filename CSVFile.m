@@ -15,16 +15,6 @@ classdef CSVFile < handle
         
     end
     
-    methods(Static)
-
-        function CloseFile()
-            % Close all currently open file
-            fclose('all');
-
-        end
-
-    end
-    
     methods
         
         function obj = CSVFile(Path,Name,Permission)
@@ -40,7 +30,7 @@ classdef CSVFile < handle
             % Insert the titles of each column
             obj.Header = HeaderData;
             for i = 1:length(obj.Header)
-                fprintf(obj.FileID,'%s,',num2str(cell2mat(obj.Header(i))));
+                fprintf(obj.FileID,'%s,',cell2mat(obj.Header(i)));
             end
             
         end
@@ -54,9 +44,15 @@ classdef CSVFile < handle
         
         function WriteDataLine(obj,CurrentData)
             % Write a line of data to the .csv file
-            CurrentData = sprintf('%0.2f,',CurrentData);
+            CurrentData = sprintf('%0.10f,',CurrentData);
             obj.CurrentDataRow = CurrentData(1:end-1);
             fprintf(obj.FileID,obj.CurrentDataRow);
+            
+        end
+        
+        function ReadDataLine(obj)
+            % read a line of data
+            
             
         end
         
@@ -74,7 +70,13 @@ classdef CSVFile < handle
             
         end
         
+        function CloseFile(~)
+            % Close all currently open file
+            fclose('all');
+
+        end
+        
     end
-    
+
 end
 

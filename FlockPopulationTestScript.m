@@ -24,10 +24,16 @@ FileObj = dir('*.fig')';
 FileName = strcat('Flock_Population_',AnalysisDate,'_',num2str(length(FileObj)),...
     '_','Photos');
 
+% Instantiate csv obj
+CSVData = CSVFile(SaveDir,FileName,'w');
+
+DataArray = [];
+HeaderArray = {};
+
+% set cd to get data from .fig files
+cd(FigDir);
+
 for i = 1:length(FileObj) 
-    
-    % set cd to get data from .fig files
-    cd(FigDir);
     
     DynamicFile = FileObj(i);
     MyFP = FlockPop(AnalysisDate);
@@ -36,16 +42,20 @@ for i = 1:length(FileObj)
     % count number of geese in a flock
     MyFP.CountGeese();
     
-    % cd to save data
-    cd(SaveDir);
+    DataArray = [DataArray,MyFP.FlockPopulation];
     
-    %writes an Excel spreadsheet of the angles of flight to the current folder
-    xlswrite(FileName,{DynamicFile.name},'Sheet1',sprintf('A%d',i))
-    xlswrite(FileName,MyFP.FlockPopulation,'Sheet1',sprintf('B%d',i))
+    HeaderArray{i} = {DynamicFile.name};
+    
+    CSVData.InsertHeader(HeaderArray{i});
     
 end
 
-FPData = xlsread(strcat(FileName,'.xls'));
+cd(SaveDir);
+
+CSVData.StartNewLine;
+CSVData.WriteDataLine(DataArray);
+CSVData.CloseFile;
+FPData = csvread(strcat(FileName,'.csv'),1);
 
 % Plot data in probability histogram
 PlotFreqHistogram(FPData,3,'Flock Population');

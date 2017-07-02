@@ -24,10 +24,16 @@ FileObj = dir('*.fig')';
 FileName = strcat('Flock_Ratio_',AnalysisDate,'_',num2str(length(FileObj)),...
     '_','Photos');
 
+% Instantiate csv obj
+CSVData = CSVFile(SaveDir,FileName,'w');
+
+DataArray = [];
+HeaderArray = {};
+
+% set cd to get data from .fig files
+cd(FigDir);
+
 for i = 1:length(FileObj)
-    
-    % set cd to get data from .fig files
-    cd(FigDir);
     
     DynamicFile = FileObj(i);
     openfig(DynamicFile.name,'invisible');
@@ -61,16 +67,23 @@ for i = 1:length(FileObj)
     % Calculate the flock ratio
     MyFlockRatio.CalculateFlockRatio();
     
-    % cd to save data
-    cd(SaveDir);
+    DataArray = [DataArray,MyFlockRatio.Ratio];
 
-    %writes an Excel spreadsheet of the flock's ratio to the current folder
-    xlswrite(FileName,{DynamicFile.name},'Sheet1',sprintf('A%d',i));
-    xlswrite(FileName,MyFlockRatio.Ratio,'Sheet1',sprintf('B%d',i));
+    HeaderArray{i} = {DynamicFile.name};
+
+    CSVData.InsertHeader(HeaderArray{i});
     
 end
 
-Ratios = xlsread(strcat(FileName,'.xls'));
+clc
+
+% cd to save data
+cd(SaveDir);
+
+CSVData.StartNewLine;
+CSVData.WriteDataLine(DataArray);
+CSVData.CloseFile;
+Ratios = csvread(strcat(FileName,'.csv'),1);
 
 % Plot data in probability histogram
 PlotFreqHistogram(Ratios,0.5,'Flock Ratio');

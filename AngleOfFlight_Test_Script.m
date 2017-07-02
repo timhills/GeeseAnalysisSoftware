@@ -37,10 +37,16 @@ FileObj = dir('*.fig')';
 FileName = strcat('Angle_Of_Flight_',AnalysisDate,'_',num2str(length(FileObj)),...
     '_','Photos');
 
+% Instantiate csv obj
+CSVData = CSVFile(SaveDir,FileName,'w');
+
+DataArray = [];
+HeaderArray = {};
+
+% set cd to get data from .fig files
+cd(FigDir);
+
 for i = 1:length(FileObj)
-    
-    % set cd to get data from .fig files
-    cd(FigDir);
     
     DynamicFile = FileObj(i);
     openfig(DynamicFile.name,'invisible');
@@ -63,11 +69,13 @@ for i = 1:length(FileObj)
         MyAngle.GetFigureData(DynamicFile.name, LeadGoose, RearGoose1, RearGoose2);
         
         % cd to save data
-        cd(SaveDir);
+        %cd(SaveDir);
         
-        %writes an Excel spreadsheet of the angles of flight to the current folder
-        xlswrite(FileName,MyAngle.Angle,'Sheet1',sprintf('B%d',i))
-        xlswrite(FileName,{DynamicFile.name},'Sheet1',sprintf('A%d',i))
+        DataArray = [DataArray,MyAngle.Angle];
+
+        HeaderArray{i} = {DynamicFile.name};
+
+        CSVData.InsertHeader(HeaderArray{i});
         
     else
         
@@ -77,7 +85,13 @@ end
 
 clc
 
-AOFData = xlsread(strcat(FileName,'.xls'));
+% cd to save data
+cd(SaveDir);
+
+CSVData.StartNewLine;
+CSVData.WriteDataLine(DataArray);
+CSVData.CloseFile;
+AOFData = csvread(strcat(FileName,'.csv'),1);
 
 % Plot data in probability histogram
 PlotFreqHistogram(AOFData,10,sprintf('Angle of Flight [%c]', char(176)))

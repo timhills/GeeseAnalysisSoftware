@@ -73,24 +73,31 @@ for i = 1:length(FileObj)
     % save figure
     SaveFig(SaveDir,DynamicFile.name);
     
-    %writes an Excel spreadsheet of the packing factors to the current folder
-    xlswrite(strrep(DynamicFile.name,'.fig',''),{'Distance_from_centroid'},...
-            sprintf('Sheet%s',num2str(i)),sprintf('A%d',1));
-        
-    xlswrite(strrep(DynamicFile.name,'.fig',''),{'Distance_from_lead_goose'},...
-        sprintf('Sheet%s',num2str(i)),sprintf('B%d',1));
+    % Instantiate csv obj
+    CSVData = CSVFile(SaveDir,strrep(DynamicFile.name,'.fig',''),'w');
+
+    DataArray = [];
+    HeaderArray = {'Distance_from_centroid';'Distance_from_lead_goose'};
+    
+    % cd to save data
+    cd(SaveDir);
+    
+    CSVData.InsertHeader(HeaderArray);
     
     for j = 1:length(Ct)
-        
-        xlswrite(strrep(DynamicFile.name,'.fig',''),Ct(j),...
-            sprintf('Sheet%s',num2str(i)),sprintf('A%d',j+1));
-        
-        xlswrite(strrep(DynamicFile.name,'.fig',''),Lg(j),...
-            sprintf('Sheet%s',num2str(i)),sprintf('B%d',j+1));
+
+        CSVData.StartNewLine;
+        CSVData.WriteDataLine([Ct(j),Lg(j)]);
         
     end
+    
+    CSVData.CloseFile;
     
     % Close unique figure
     close all
     
 end
+
+clc
+
+disp('Analysis complete!')
