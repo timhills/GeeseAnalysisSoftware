@@ -101,6 +101,21 @@ classdef CtVSLg < handle
             
         end
         
+        function PlotVisualData(obj)
+            %Plot the actual centeroid data and the flock's centroid
+            obj.Centroid;
+            obj.GeesePositionArray;
+            figure
+            for i = 1:obj.NumOfGeese
+               scatter3(obj.GeesePositionArray(1,i),obj.GeesePositionArray(2,i),...
+                   obj.GeesePositionArray(3,i),'o','filled') 
+               hold on
+            end
+            scatter3(obj.Centroid(1),obj.Centroid(2),obj.Centroid(3),'ko','filled')
+            axis equal
+            
+        end
+        
     end
     
 end

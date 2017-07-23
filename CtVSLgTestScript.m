@@ -2,7 +2,7 @@
 % Author: Tim Hills
 % Made: 6-17-2017
 
-clear all; close all; clc
+%clear all; close all; clc
 
 % user selects which dir the geese figures are in
 FigDir = uigetdir('C:\Users\Timothy\Dropbox\Research\', ...
@@ -72,6 +72,9 @@ for i = 1:length(FileObj)
     
     % save figure
     SaveFig(SaveDir,DynamicFile.name);
+    
+    % plot position data
+    MyCtVSLg.PlotVisualData();
     
     % Instantiate csv obj
     CSVData = CSVFile(SaveDir,strrep(DynamicFile.name,'.fig',''),'w');
