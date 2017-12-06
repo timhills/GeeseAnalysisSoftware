@@ -46,6 +46,8 @@ end
 
 NNDData = xlsread(strcat(FileName,'.xls'));
 
+NNDData(find(isnan(NNDData))) = [];
+
 % Plot data in probability histogram
 PlotFreqHistogram(NNDData,0.2,'Nearest Neighbor Distance [m]')
 

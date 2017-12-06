@@ -12,7 +12,7 @@ Edited: 6-17-2017
 
 %}
 
-clear all; close all; clc
+%clear all; close all; clc
 
 % user selects which dir the geese figures are in
 FigDir = uigetdir('C:\Users\Timothy\Dropbox\Research\', ...
